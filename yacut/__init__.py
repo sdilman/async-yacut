@@ -9,6 +9,3 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 app.json.ensure_ascii = False
-
-
-#from . import api_views, cli_commands, error_handlers, views
