@@ -11,4 +11,4 @@ migrate = Migrate(app, db)
 app.json.ensure_ascii = False
 
 
-from . import views
+from . import api_views, views
