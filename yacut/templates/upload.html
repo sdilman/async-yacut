@@ -29,14 +29,13 @@
                 {{ form.submit(class="btn btn-primary") }}
             </form>
             
-            {% if saved_files %}
+            {% if urls %}
             <div class="mt-4">
                 <h5>Загруженные файлы:</h5>
                 <ul class="list-group">
-                    {% for file in saved_files %}
+                    {% for url in urls %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ file }}
-                        <a href="{{ url_for('static', filename='uploads/' + file) }}" 
+                        <a href="{{ url }}"
                            target="_blank" 
                            class="badge bg-primary rounded-pill">Просмотр</a>
                     </li>

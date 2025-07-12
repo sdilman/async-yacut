@@ -1,12 +1,10 @@
-import os
-
 from flask import flash, redirect, render_template, url_for
-from werkzeug.utils import secure_filename
 
 from . import app, db
 from .forms import FileForm, LinkForm
 from .models import URLMap
 from .utils import get_unique_short_id
+from .ya_disk import async_upload_files
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -41,27 +39,17 @@ def redirect_to_original(short_id):
 
 
 @app.route('/upload', methods=['GET', 'POST'])
-def upload_files():
+async def upload_files():
     form = FileForm()
     
     if form.validate_on_submit():
         if not form.files.data or all(file.filename == '' for file in form.files.data):
             flash('Выберите хотя бы один файл', 'danger')
             return redirect(url_for('upload_files'))
+        urls = await async_upload_files(form.files.data)
 
-        saved_files = []
-        for file in form.files.data:
-            if file and file.filename != '':
-                filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # TODO: исправить на яндекс диск
-                if os.path.exists(file_path):
-                    flash(f'Файл {filename} уже существует', 'warning')
-                    continue
-                file.save(file_path)
-                saved_files.append(filename)
-        
-        if saved_files:
-            flash(f'Успешно загружено {len(saved_files)} файлов', 'success')
-        return redirect(url_for('upload_files'))
+        # сделать короткие ссылки, сохранить их, и в html сделать переход на redirect_to_original
+        #return redirect(url_for('upload_files', urls=urls))
+        return render_template('upload.html', form=form, urls=urls)
     
     return render_template('upload.html', form=form)
