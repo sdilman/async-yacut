@@ -5,11 +5,11 @@ import aiohttp
 import asyncio
 
 
-API_HOST = os.environ['API_HOST']
-API_VERSION = os.environ['API_VERSION']
+API_HOST = os.getenv('API_HOST')
+API_VERSION = os.getenv('API_VERSION')
 REQUEST_UPLOAD_URL = f'{API_HOST}{API_VERSION}/disk/resources/upload'
 DOWNLOAD_LINK_URL = f'{API_HOST}{API_VERSION}/disk/resources/download'
-DISK_TOKEN = os.environ['DISK_TOKEN']
+DISK_TOKEN = os.getenv('DISK_TOKEN')
 AUTH_HEADERS = {
     'Authorization': f'OAuth {DISK_TOKEN}'
 }
