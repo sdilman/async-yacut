@@ -10,7 +10,7 @@ API_VERSION = os.environ['API_VERSION']
 REQUEST_UPLOAD_URL = f'{API_HOST}{API_VERSION}/disk/resources/upload'
 DOWNLOAD_LINK_URL = f'{API_HOST}{API_VERSION}/disk/resources/download'
 AUTH_HEADERS = {
-    'Authorization': f'OAuth {os.environ['DISK_TOKEN']}'
+    'Authorization': f'OAuth {os.environ.get('DISK_TOKEN', '')}'
 }
 
 
