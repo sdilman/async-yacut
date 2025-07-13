@@ -21,9 +21,9 @@ def get_link(short_id):
 def add_link():
     if int(request.headers.get('Content-Length', 0)) == 0:
         raise InvalidAPIUsage('Отсутствует тело запроса')
-    
+
     data = request.get_json()
-    
+
     if 'url' not in data:
         raise InvalidAPIUsage('"url" является обязательным полем!')
 
@@ -32,12 +32,14 @@ def add_link():
         and data['custom_id'] != ''
         and not re.fullmatch(SHORT_LINK_ID_PATTERN, data['custom_id'])
     ):
-        raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки') 
+        raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
     if (
         'custom_id' in data
         and URLMap.query.filter_by(short=data['custom_id']).first() is not None
     ):
-        raise InvalidAPIUsage('Предложенный вариант короткой ссылки уже существует.')
+        raise InvalidAPIUsage(
+            'Предложенный вариант короткой ссылки уже существует.'
+        )
 
     if 'custom_id' in data and data['custom_id'] != '':
         custom_id = data['custom_id']
