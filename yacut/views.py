@@ -43,13 +43,17 @@ async def upload_files():
     form = FileForm()
     
     if form.validate_on_submit():
-        if not form.files.data or all(file.filename == '' for file in form.files.data):
+        file_names = [file.filename for file in form.files.data]
+        if not form.files.data or all(file_name == '' for file_name in file_names):
             flash('Выберите хотя бы один файл', 'danger')
             return redirect(url_for('upload_files'))
         urls = await async_upload_files(form.files.data)
-
         # сделать короткие ссылки, сохранить их, и в html сделать переход на redirect_to_original
         #return redirect(url_for('upload_files', urls=urls))
-        return render_template('upload.html', form=form, urls=urls)
+        return render_template(
+            'upload.html',
+            form=form,
+            file_info=zip(file_names, urls)
+        )
     
     return render_template('upload.html', form=form)

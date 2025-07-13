@@ -29,15 +29,17 @@
                 {{ form.submit(class="btn btn-primary") }}
             </form>
             
-            {% if urls %}
+            {% if file_info %}
             <div class="mt-4">
                 <h5>Загруженные файлы:</h5>
                 <ul class="list-group">
-                    {% for url in urls %}
+                    {% for file_name, url in file_info %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ file_name }}
                         <a href="{{ url }}"
-                           target="_blank" 
-                           class="badge bg-primary rounded-pill">Просмотр</a>
+                           target="_blank"
+                           download="{{ file_name }}"
+                           class="badge bg-primary rounded-pill">{{ url }}</a>
                     </li>
                     {% endfor %}
                 </ul>
