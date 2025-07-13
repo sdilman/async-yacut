@@ -1,10 +1,14 @@
 from flask import flash, redirect, render_template, url_for
 
 from . import app, db
+from .error_handlers import InvalidAPIUsage
 from .forms import FileForm, LinkForm
 from .models import URLMap
 from .utils import get_unique_short_id
 from .ya_disk import async_upload_files
+
+
+FORBIDDEN_IDS = ('files',)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -12,10 +16,14 @@ def index():
     form = LinkForm()
 
     if form.validate_on_submit():
+        if form.custom_id.data and form.custom_id.data in FORBIDDEN_IDS:
+            flash('Предложенный вариант короткой ссылки уже существует.', 'error')
+            return render_template('index.html', form=form)
+
         custom_id = form.custom_id.data or get_unique_short_id()
 
         if URLMap.query.filter_by(short=custom_id).first():
-            flash('Этот короткий идентификатор уже занят!', 'error')
+            flash('Предложенный вариант короткой ссылки уже существует.', 'error')
             return render_template('index.html', form=form)
 
         url_map = URLMap(
@@ -42,7 +50,7 @@ def redirect_to_original(short_id):
     return redirect(url_map.original)
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/files', methods=['GET', 'POST'])
 async def upload_files():
     form = FileForm()
 
