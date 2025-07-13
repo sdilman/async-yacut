@@ -1,6 +1,6 @@
-from flask import jsonify, render_template
+from flask import jsonify
 
-from . import app, db
+from . import app
 
 
 class InvalidAPIUsage(Exception):
@@ -13,7 +13,7 @@ class InvalidAPIUsage(Exception):
             self.status_code = status_code
 
     def to_dict(self):
-        return dict(message = self.message)
+        return dict(message=self.message)
 
 
 @app.errorhandler(InvalidAPIUsage)

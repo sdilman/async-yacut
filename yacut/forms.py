@@ -21,7 +21,7 @@ class FileForm(FlaskForm):
     files = MultipleFileField(
         validators=[
             FileAllowed(
-                ['jpg', 'jpeg', 'png', 'gif', 'bmp'], 
+                ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
                 message=(
                     'Выберите файлы с расширением '
                     '.jpg, .jpeg, .png, .gif или .bmp'

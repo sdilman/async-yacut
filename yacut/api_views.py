@@ -5,7 +5,7 @@ from .error_handlers import InvalidAPIUsage
 from .models import URLMap
 
 
-@app.route('/api/opinions/<string:short_id>/', methods=['GET'])  
+@app.route('/api/opinions/<string:short_id>/', methods=['GET'])
 def get_opinion(short_id):
     if url_map := URLMap.query.filter_by(short=short_id).first() is None:
         raise InvalidAPIUsage('Указанный id не найден', status_code=404)

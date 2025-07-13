@@ -30,7 +30,7 @@ async def async_upload_files(images):
 
 async def async_process_file(session, image):
     payload = {
-        'path': f'app:/{image.filename}',  
+        'path': f'app:/{image.filename}',  # noqa E231
         'overwrite': 'True'
     }
 
@@ -53,7 +53,7 @@ async def async_process_file(session, image):
 
     async with session.get(
         headers=AUTH_HEADERS,
-        url=DOWNLOAD_LINK_URL, 
+        url=DOWNLOAD_LINK_URL,
         params={'path': location}
     ) as response:
         response_serialized = await response.json()

@@ -11,11 +11,11 @@ class URLMap(db.Model):
 
     def __repr__(self):
         return f'<URLMap {self.original} -> {self.short}>'
-    
+
     def to_dict(self):
         return dict(
-            url = self.original,
-            short_link = self.short,
+            url=self.original,
+            short_link=self.short,
         )
 
     def from_dict(self, data):
