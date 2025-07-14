@@ -10,7 +10,7 @@ from .ya_disk import async_upload_files
 FORBIDDEN_IDS = ('files',)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=('GET', 'POST'))
 def index():
     form = LinkForm()
 
@@ -31,12 +31,7 @@ def index():
             )
             return render_template('index.html', form=form)
 
-        url_map = URLMap(
-            original=form.original_link.data,
-            short=custom_id
-        )
-        db.session.add(url_map)
-        db.session.commit()
+        URLMap.create(form.original_link.data, custom_id)
 
         flash('Ссылка успешно сокращена!', 'success')
         short_url = url_for(
@@ -55,7 +50,7 @@ def redirect_to_original(short_id):
     return redirect(url_map.original)
 
 
-@app.route('/files', methods=['GET', 'POST'])
+@app.route('/files', methods=('GET', 'POST'))
 async def upload_files():
     form = FileForm()
 
@@ -75,12 +70,7 @@ async def upload_files():
         for url in urls:
             custom_id = get_unique_short_id()
             custom_ids.append(custom_id)
-            url_map = URLMap(
-                original=url,
-                short=custom_id
-            )
-            db.session.add(url_map)
-            db.session.commit()
+            URLMap.create(url, custom_id)
 
         short_urls = [
             url_for('redirect_to_original', short_id=custom_id, _external=True)
