@@ -10,6 +10,7 @@ from .link_processor import get_unique_short_id
 SHORT_LINK_ID_PATTERN = r'^[a-zA-Z0-9]{1,16}$'
 ORIGINAL_LINK_ID_PATTERN = r'^https?://.+'
 
+
 @app.route('/api/id/<string:short_id>/', methods=('GET',))
 def get_link(short_id):
     if (url_map := URLMap.query.filter_by(short=short_id).first()) is None:
