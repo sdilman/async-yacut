@@ -78,3 +78,13 @@ flask db upgrade
 ```
 flask run
 ```
+
+Примеры запросов к API:
+
+POST /api/id
+{
+  "url": "string",
+  "custom_id": "string"
+}
+
+GET /api/id/{short_link}
