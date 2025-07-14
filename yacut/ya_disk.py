@@ -17,14 +17,12 @@ AUTH_HEADERS = {
 
 async def async_upload_files(images):
     if images is not None:
-        tasks = []
         async with aiohttp.ClientSession() as session:
-            for image in images:
-                tasks.append(
-                    asyncio.ensure_future(
-                        async_process_file(session, image)
-                    )
-                )
+            tasks = [
+                asyncio.ensure_future(async_process_file(session, image))
+                for image
+                in images
+            ]
             urls = await asyncio.gather(*tasks)
         return urls
 
