@@ -16,3 +16,13 @@ class URLMap(db.Model):
         for field in ('original', 'short'):
             if field in data:
                 setattr(self, field, data[field])
+
+    @staticmethod
+    def create(original, short):
+        url_map = URLMap(
+            original=original,
+            short=short
+        )
+        db.session.add(url_map)
+        db.session.commit()
+        return url_map

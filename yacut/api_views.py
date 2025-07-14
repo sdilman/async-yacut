@@ -1,23 +1,23 @@
 from flask import jsonify, request, url_for
 import re
 
-from . import app, db
+from . import app
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
-from .utils import get_unique_short_id
+from .link_processor import get_unique_short_id
 
 
 SHORT_LINK_ID_PATTERN = r'^[a-zA-Z0-9]{1,16}$'
+ORIGINAL_LINK_ID_PATTERN = r'^https?://.+'
 
-
-@app.route('/api/id/<string:short_id>/', methods=['GET'])
+@app.route('/api/id/<string:short_id>/', methods=('GET',))
 def get_link(short_id):
     if (url_map := URLMap.query.filter_by(short=short_id).first()) is None:
         raise InvalidAPIUsage('Указанный id не найден', status_code=404)
     return jsonify({'url': url_map.original}), 200
 
 
-@app.route('/api/id/', methods=['POST'])
+@app.route('/api/id/', methods=('POST',))
 def add_link():
     if int(request.headers.get('Content-Length', 0)) == 0:
         raise InvalidAPIUsage('Отсутствует тело запроса')
@@ -26,6 +26,8 @@ def add_link():
 
     if 'url' not in data:
         raise InvalidAPIUsage('"url" является обязательным полем!')
+    if not re.fullmatch(ORIGINAL_LINK_ID_PATTERN, data['url']):
+        raise InvalidAPIUsage('Указан недопустимый "url"')
 
     if (
         'custom_id' in data
@@ -46,12 +48,7 @@ def add_link():
     else:
         custom_id = get_unique_short_id()
 
-    url_map = URLMap(
-        original=data['url'],
-        short=data.get('custom_id', custom_id)
-    )
-    db.session.add(url_map)
-    db.session.commit()
+    url_map = URLMap.create(data['url'], data.get('custom_id', custom_id))
     return jsonify(
         dict(
             url=url_map.original,

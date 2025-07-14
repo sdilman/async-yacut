@@ -1,9 +1,27 @@
+### О проекте Yacut:
+
+Проект yacut позволяет загружать файлы в Яндекс-облако и создавать для них короткие ссылки
+
+Расположение проекта: https://github.com/sdilman/async-yacut
+
+Автор: https://github.com/sdilman
+
+Технологии:
+
+| Категория       | Технологии                          |
+|-----------------|-------------------------------------|
+| Backend         | Python 3.9+, Flask 2.0+             |
+| База данных     | SQLite (с Alembic для миграций)     |
+| Хранилище       | Яндекс.Диск (через REST API)        |
+| Асинхронность   | aiohttp, asyncio                    |
+
+
 ### Как запустить проект Yacut:
 
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone 
+git clone git@github.com:sdilman/async-yacut.git
 ```
 
 ```
@@ -38,13 +56,15 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Создать в директории проекта файл .env с четыремя переменными окружения:
+Создать в директории проекта файл .env с переменными окружения:
 
 ```
 FLASK_APP=yacut
-FLASK_ENV=development
-SECRET_KEY=your_secret_key
-DB=sqlite:///db.sqlite3
+DATABASE_URI='sqlite:///db.sqlite3'
+SECRET_KEY='17268wt1782187t2871et8t387te'
+DISK_TOKEN='<ваш токен>'
+API_HOST='https://cloud-api.yandex.net/'
+API_VERSION='v1'
 ```
 
 Создать базу данных и применить миграции:
@@ -58,3 +78,14 @@ flask db upgrade
 ```
 flask run
 ```
+
+Примеры запросов к API:
+
+POST /api/id
+
+{
+  "url": "string",
+  "custom_id": "string"
+}
+
+GET /api/id/{short_link}
