@@ -1,10 +1,10 @@
 from flask import jsonify, request, url_for
 import re
 
-from . import app, db
+from . import app
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
-from .utils import get_unique_short_id
+from .link_processor import get_unique_short_id
 
 
 SHORT_LINK_ID_PATTERN = r'^[a-zA-Z0-9]{1,16}$'

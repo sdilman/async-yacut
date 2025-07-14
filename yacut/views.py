@@ -1,9 +1,9 @@
 from flask import flash, redirect, render_template, url_for
 
-from . import app, db
+from . import app
 from .forms import FileForm, LinkForm
 from .models import URLMap
-from .utils import get_unique_short_id
+from .link_processor import get_unique_short_id
 from .ya_disk import async_upload_files
 
 
