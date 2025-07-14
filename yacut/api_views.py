@@ -8,7 +8,7 @@ from .link_processor import get_unique_short_id
 
 
 SHORT_LINK_ID_PATTERN = r'^[a-zA-Z0-9]{1,16}$'
-
+ORIGINAL_LINK_ID_PATTERN = r'^https?://.+'
 
 @app.route('/api/id/<string:short_id>/', methods=('GET',))
 def get_link(short_id):
@@ -26,6 +26,8 @@ def add_link():
 
     if 'url' not in data:
         raise InvalidAPIUsage('"url" является обязательным полем!')
+    if not re.fullmatch(ORIGINAL_LINK_ID_PATTERN, data['url']):
+        raise InvalidAPIUsage('Указан недопустимый "url"')
 
     if (
         'custom_id' in data
